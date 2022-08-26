@@ -1,0 +1,10 @@
+<h2>here are the every users registered :</h2><br><br>
+{{#each datas}}
+name : {{name}}<br>
+email :{{email}}<br>
+{{#if discription}}
+discription : {{discription}}<br>
+{{else}}
+discription : not specified<br>
+{{/if}}
+{{/each}}
