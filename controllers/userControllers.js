@@ -2,6 +2,7 @@ const userModel = require('../models/userModels')
 const chalk = require('chalk')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const passport = require('passport')
 const secret = process.env.JWT_SECRET_KEY
 
 module.exports = {
@@ -79,5 +80,11 @@ module.exports = {
         }catch(err){
             console.log(`${chalk.red(`${err}`)}`);
         }
+    },
+    loginPassport:(req, res, next)=>{
+        passport.authenticate('local',{
+            successRedirect:"/getdetails",
+            failureRedirect:"/"
+        })
     }
 }

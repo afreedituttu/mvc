@@ -10,10 +10,22 @@ const chalk = require('chalk')
 const mongoose = require('./config/connection');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser')
+const passport = require('passport')
+const initialize = require('./config/passport')
+const session = require('express-session')
+initialize(passport)
+
+app.use(session({
+    secret:process.env.SECRET_KEY,
+    resave:true,
+    saveUninitialized:true
+}))
+app.use(passport.initialize())
+app.use(passport.session())
 
 app.use(logger('dev'))
 app.use(cookieParser());
-app.use(bodyParser({extended:true}))
+app.use(bodyParser.urlencoded({extended:true}))
 app.use(route)
 
 app.set('views', path.join(__dirname,'/views'))
@@ -27,6 +39,8 @@ app.engine('hbs',hbs.engine({
 app.use(express.json())
 app.use(express.urlencoded({ extended:true }))
 app.use(express.static(path.join(__dirname, 'public')))
+
+
 
 app.use(function(req,res,next){
     res.status(404);
