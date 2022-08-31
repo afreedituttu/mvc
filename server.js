@@ -4,13 +4,13 @@ require('dotenv').config();
 const hbs = require('express-handlebars')
 const PORT = process.env.PORT || 4000;
 const route = require('./routes');
-const path = require('path')
-const logger = require('morgan')
-const chalk = require('chalk')
+const path = require('path');
+const logger = require('morgan');
+const chalk = require('chalk');
 const mongoose = require('./config/connection');
 const cookieParser = require('cookie-parser');
-const bodyParser = require('body-parser')
-const creatHttpErrors = require('http-errors')
+const bodyParser = require('body-parser');
+const creatHttpErrors = require('http-errors');
 
 const passport = require('passport')
 const initialize = require('./config/passport')
