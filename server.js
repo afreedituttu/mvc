@@ -10,6 +10,8 @@ const chalk = require('chalk')
 const mongoose = require('./config/connection');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser')
+const creatHttpErrors = require('http-errors')
+
 const passport = require('passport')
 const initialize = require('./config/passport')
 const session = require('express-session')
@@ -47,6 +49,16 @@ app.use(function(req,res,next){
     res.render('404',{url:req.url});
     return;
 })
+
+// app.use((req, res, next)=>{
+//     next(creatHttpErrors.NotFound())
+// })
+
+// app.use((error, req, res, next)=>{
+//     error.status = error.status || 500;
+//     res.status(error.status);
+//     res.send(error)
+// })
 
 app.listen(PORT, (err)=>{
     if(err) console.log(err);
