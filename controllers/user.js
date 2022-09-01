@@ -6,6 +6,7 @@ module.exports = {
         res.render('homePage')
     },
     profile:(req, res)=>{
+        console.log(req.session.passport.user);
         res.send('im at home')
     },
     getusers:async(req,res)=>{
