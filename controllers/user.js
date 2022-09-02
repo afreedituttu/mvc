@@ -6,13 +6,11 @@ module.exports = {
         res.render('homePage')
     },
     profile:(req, res)=>{
-        console.log(req.session.passport.user);
         res.send('im at home')
     },
     getusers:async(req,res)=>{
         try{
             userModel.find({}).lean().then((data)=>{
-                console.log(data);
                 res.render('userDetails',{'datas':data})
             }).catch((err)=>{
                 console.log(err);
@@ -21,6 +19,20 @@ module.exports = {
         }catch(err){
             console.log(`${chalk.red(`${err}`)}`);
             res.send('err')
+        }
+    },
+    deleteUser:async(req, res)=>{
+        try{
+            const { id } = req.body
+            userModel.deleteOne({_id:id}).then((result)=>{
+                res.redirect('/getusers')
+            }).catch((err)=>{
+                console.log(err);
+                res.send('some error occured and failed to delete')
+            })
+        }catch(err){
+            console.log(err);
+            res.send('err occured during deletio of user')
         }
     }
 }

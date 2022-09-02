@@ -8,7 +8,6 @@ module.exports = {
                     console.log('err');
                     return reject(err)
                 }
-                console.log('success');
                 return resolve(result)
             })
         })

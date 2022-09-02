@@ -9,28 +9,6 @@ module.exports = {
     loginHome:(req,res)=>{
         res.render('loginPage')
     },
-    login:async(req,res)=>{
-        try{
-            console.log('im entered to user');
-            const { email, password } = req.body
-
-            const user = await userModel.findOne({email:email}).lean()
-            console.log(user);
-
-            if(!user) return res.render('loginPage',{error:'user does not exist'})
-            console.log('user doesnt exist');
-            const isMatch = await bcrypt.compare(password, user.password)
-            if(!isMatch) return res.render('loginPage',{error:"password is incorrect"})
-
-            const token = jwt.sign({name:user.name,email:user.email},secret,{expiresIn:'1h'})
-            res.cookie('jwt',token)
-            return res.render('loginPage',{logedIn:true, name:user.name, email:user.email, discription:user.discription,token:token})
-
-        }catch(err){
-            res.render('Error')
-            console.log(err);
-        }
-    },
     registerHome:(req,res)=>{
         res.render('userRegister')
     },
@@ -55,12 +33,11 @@ module.exports = {
                 discription:discription
             })
 
-            await user.save().then((err, id)=>{
-                if(err) throw err;
+            await user.save().then((id)=>{
                 res.redirect('/auth/login')
             }).catch((err)=>{
                 console.log(err);
-                res.render('Error')
+                res.send('Error occured at saving user at database')
             })
         }catch(err){
             res.render('Error',{error:err})

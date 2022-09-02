@@ -50,16 +50,6 @@ app.use(function(req,res,next){
     return;
 })
 
-// app.use((req, res, next)=>{
-//     next(creatHttpErrors.NotFound())
-// })
-
-// app.use((error, req, res, next)=>{
-//     error.status = error.status || 500;
-//     res.status(error.status);
-//     res.send(error)
-// })
-
 app.listen(PORT, (err)=>{
     if(err) console.log(err);
     console.log(`${chalk.green('server started listening on PORT : ')}${chalk.blue(`${PORT}`)}`)

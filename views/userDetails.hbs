@@ -7,4 +7,10 @@ discription : {{discription}}<br>
 {{else}}
 discription : not specified<br>
 {{/if}}
+<form action="/delete" method="post">
+<input type="text" name="id" id="id" value="{{_id}}" hidden="true">
+<input type="submit" value="delete">
+</form>
 {{/each}}
+<br>
+<a href="/auth/register">add user</a>
