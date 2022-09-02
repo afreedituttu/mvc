@@ -11,6 +11,7 @@ const fileStorageEngine = multer.diskStorage({
     }
 })
 const upload = multer({ storage: fileStorageEngine})
+const fileHelper = require('../helpers/deleteFile')
 
 module.exports = {
     getAllProduct:async(req, res)=>{
@@ -18,7 +19,7 @@ module.exports = {
             console.log(products);
             res.render('allProducts', {products})
         }).catch((err)=>{
-            res.send('error occured')
+            res.send('error occured at getallproducts')
             throw err
         })
     },
@@ -38,6 +39,11 @@ module.exports = {
         await product.save().then((result)=>{
             res.send('successfully uploaded')
         }).catch((err)=>{
+            const imagePath = __dirname + '/images' + '/' + req.file.filename.trim()
+            fs.unlink(imagePath, (error, result)=>{
+                res.send('err occured')
+                if(error) throw error;
+            })
             throw err
         })
         //upload.array('image',3) && req.files for accessing details
@@ -61,20 +67,33 @@ module.exports = {
         //     })
         // })
     },
-    deleteProduct:(req, res)=>{
-        const { image, productid } = req.body
-
-        const imagePath = __dirname + '/images' + '/' + image
-        fs.unlink(imagePath, (err, result)=>{
-            if(err) return res.send('err occured')
-        })
+    deleteProduct:async(req, res)=>{
+        const { id, image } = req.body
         
-        productModel.deleteOne({_id:objectId(productid)}).then((err, result)=>{
-            if(err){
-                res.send('error occured during product delete')
-                throw err;
-            }
-            return res.send('product deleted')
+
+
+        // const imagePath = __dirname + '\\images' + '\\' + image
+        const imagePath = __dirname + '\\..\\images\\' + image
+        console.log(('here it is : \n\n\n'));
+        console.log(imagePath);
+        // await fs.unlink(imagePath, (err, result)=>{
+        //     if(err){
+        //         console.log(err);
+        //         return res.send('err occured at file managing');
+        //     }
+        // })
+        fileHelper.deleteFile(imagePath).then((result)=>{
+            productModel.deleteOne({_id:objectId(id)}).then((result)=>{
+                return res.send('product deleted')
+            }).catch((err)=>{
+                if(err){
+                    res.send('err occured at database product deletion')
+                    console.log(err);
+                }
+            })
+        }).catch((err)=>{
+            res.send('err occured at promise of file handling');
+            console.log(err);
         })
     },
     upload:upload

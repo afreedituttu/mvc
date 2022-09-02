@@ -1,7 +1,13 @@
 <h1>products</h1>
 <br>
 {{#each products}}
+<br>
 name: {{name}} <br>
 price: {{price}} <br>
-image: {{image}}
+image: {{image}} <br>
+<form action="/product/delete" method="post">
+<input type="text" name="image" value="{{image}}" hidden="true">
+<input type="text" name="id" value="{{_id}}" hidden="true">
+<input type="submit" value="delete">
+</form>
 {{/each}}
