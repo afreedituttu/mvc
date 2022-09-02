@@ -39,12 +39,17 @@ module.exports = {
         await product.save().then((result)=>{
             res.send('successfully uploaded')
         }).catch((err)=>{
-            const imagePath = __dirname + '/images' + '/' + req.file.filename.trim()
-            fs.unlink(imagePath, (error, result)=>{
-                res.send('err occured')
-                if(error) throw error;
+            const imagePath = __dirname + '\\..\\images\\' + req.file.filename.trim()
+            console.log(imagePath);
+            fileHelper.deleteFile(imagePath).then((result)=>{
+                res.send('product addition cannot be completed due to unknown error')
+            }).catch((error)=>{
+                res.send('err occured at promise of file handling at adding product');
+                console.log('err from fileHelper\n');
+                console.log(error);
             })
-            throw err
+            console.log('err from database\n');
+            console.log(err);
         })
         //upload.array('image',3) && req.files for accessing details
         // upload.single('image')(req, {}, (err)=>{
