@@ -11,6 +11,7 @@ const fileStorageEngine = multer.diskStorage({
 })
 const upload = multer({ storage: fileStorageEngine})
 const fileHelper = require('../helpers/deleteFile')
+const s3Helper = require('../helpers/s3')
 
 module.exports = {
     getAllProduct:async(req, res)=>{
@@ -27,6 +28,7 @@ module.exports = {
     addProduct:async(req, res)=>{
 
         const { name, price } = req.body
+        console.log(req.file);
         image = req.file.filename
 
         const product = new productModel({
@@ -64,6 +66,42 @@ module.exports = {
         }).catch((err)=>{
             res.send('err occured at promise of file handling');
             console.log(err);
+        })
+    },
+    uploadtos3Home:async(req, res)=>{
+        res.render('s3test')
+    },
+    uploadtos3:async(req, res)=>{
+        // console.log(req.file);
+        // const result = await s3Helper.uploadS3(req.file)
+        // console.log(result);
+        // res.send('im at s3 post')
+
+        console.log(req.file);
+        s3Helper.uploadS3promise(req.file).then((result)=>{
+            console.log(result);
+            
+            const imagePath = __dirname + '\\..\\images\\' + req.file.filename
+            
+            fileHelper.deleteFile(imagePath).then((result2)=>{
+                console.log(result.key);
+                res.send('successfully completed all procedure '+result.key);
+            }).catch((err)=>{
+                res.send('some err occured to complete every procedure')
+            })
+        }).catch((err)=>{
+            console.log("err occured myr \n", err);
+            res.send('some internal error')
+        })
+    },
+    readFromS3:(req, res)=>{
+        key = req.params.key
+        console.log(key);
+        s3Helper.readFromS3(key).then((result)=>{
+            res.send(result)
+        }).catch((err)=>{
+            console.log(err);
+            res.send('internal err')
         })
     },
     upload:upload
