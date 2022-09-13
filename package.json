@@ -4,6 +4,8 @@
   "description": "",
   "main": "server.js",
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.169.0",
+    "@aws-sdk/s3-request-presigner": "^3.169.0",
     "aws-sdk": "^2.1213.0",
     "bcrypt": "^5.0.1",
     "body-parser": "^1.20.0",
@@ -22,7 +24,8 @@
     "nodemon": "^2.0.19",
     "passport": "^0.6.0",
     "passport-local": "^1.0.0",
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "sharp": "^0.31.0"
   },
   "devDependencies": {},
   "scripts": {

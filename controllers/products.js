@@ -1,3 +1,4 @@
+
 const multer = require('multer')
 const productModel = require('../models/product')
 const objectId = require('mongoose').Types.ObjectId
@@ -6,6 +7,7 @@ const fileStorageEngine = multer.diskStorage({
         cb(null, './images')
     },
     filename:(req, file, cb)=>{
+
         cb(null, Date.now().toString() + '_' + file.originalname.trim())
     }
 })
@@ -102,6 +104,25 @@ module.exports = {
         }).catch((err)=>{
             console.log(err);
             res.send('internal err')
+        })
+    },
+    directToS3Home:(req, res)=>{
+        res.render('direcTtoS3')
+    },
+    directToS3:(req, res)=>{
+        s3Helper.directToS3(req.file).then((result)=>{
+            console.log(result);
+            res.send('k')
+        }).catch((err)=>{
+            console.log(err);
+            res.send(err)
+        })
+    },directGetS3:(req, res)=>{
+        s3Helper.directGetS3(req).then((result)=>{
+            res.send(result)
+        }).catch((err)=>{
+            console.log(err);
+            res.send(err)
         })
     },
     upload:upload
