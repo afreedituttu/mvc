@@ -1,7 +1,7 @@
-
 const multer = require('multer')
 const productModel = require('../models/product')
 const objectId = require('mongoose').Types.ObjectId
+
 const fileStorageEngine = multer.diskStorage({
     destination: (req, file, cb)=>{
         cb(null, './images')
@@ -11,6 +11,7 @@ const fileStorageEngine = multer.diskStorage({
         cb(null, Date.now().toString() + '_' + file.originalname.trim())
     }
 })
+
 const upload = multer({ storage: fileStorageEngine})
 const fileHelper = require('../helpers/deleteFile')
 const s3Helper = require('../helpers/s3')
@@ -70,17 +71,13 @@ module.exports = {
             console.log(err);
         })
     },
+    //s3 parts begin
     uploadtos3Home:async(req, res)=>{
         res.render('s3test')
     },
     uploadtos3:async(req, res)=>{
-        // console.log(req.file);
-        // const result = await s3Helper.uploadS3(req.file)
-        // console.log(result);
-        // res.send('im at s3 post')
-
         console.log(req.file);
-        s3Helper.uploadS3promise(req.file).then((result)=>{
+        s3Helper.uploadS3(req.file).then((result)=>{
             console.log(result);
             
             const imagePath = __dirname + '\\..\\images\\' + req.file.filename
@@ -96,6 +93,7 @@ module.exports = {
             res.send('some internal error')
         })
     },
+    //needed to figure out or correct
     readFromS3:(req, res)=>{
         key = req.params.key
         console.log(key);
@@ -106,6 +104,8 @@ module.exports = {
             res.send('internal err')
         })
     },
+
+    //direcet uploading to s3 without saving on computer begins
     directToS3Home:(req, res)=>{
         res.render('direcTtoS3')
     },

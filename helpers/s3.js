@@ -1,18 +1,26 @@
 require('dotenv').config()
 const S3 = require('aws-sdk').S3
 const crypto = require('crypto')
-const {S3Client, PutObjectCommand, GetObjectCommand} = require('@aws-sdk/client-s3')
-const {getSignedUrl} = require('@aws-sdk/s3-request-presigner')
+
+const { S3Client, PutObjectCommand, GetObjectCommand } = require('@aws-sdk/client-s3')
+const { getSignedUrl } = require('@aws-sdk/s3-request-presigner')
+
 const fs = require('fs')
 const sharp = require('sharp')
-const multer = require('multer') // for memory storage
+
+// for multer memory storage
+const multer = require('multer')
 const storage = multer.memoryStorage()
 const upload = multer({storage:storage})
+
+// used to save to s3 after saving it on files
 const s3 = new S3({
     region:process.env.AWS_BUCKET_REGION,
     accessKeyId:process.env.AWS_ACCESS_KEY,
     secretAccessKey:process.env.AWS_SECRET_KEY
 })
+
+// usesd to save to s3 without saving on file
 const s3ClientModel = new S3Client({
     region:process.env.AWS_BUCKET_REGION,
     credentials:{ 
@@ -22,22 +30,10 @@ const s3ClientModel = new S3Client({
 })
 
 module.exports = {
-    // uploadS3:(file)=>{
-    //     filepath = __dirname + '\\..\\images\\' + file.filename
-    //     const fileStream = fs.createReadStream(filepath)
-
-    //     const uploadParams = {
-    //         Bucket: process.env.AWS_BUCKET_NAME,
-    //         Body: fileStream,
-    //         Key: file.filename
-    //     }
-
-    //     return s3.upload(uploadParams).promise()
-    // },
     readFromS3:(req, res)=>{
-
+        res.send('coming soon...')
     },
-    uploadS3promise:(file)=>{
+    uploadS3:(file)=>{
         return new Promise(async(resolve, reject)=>{
             filepath = __dirname + '\\..\\images\\' + file.filename
             const fileStream = fs.createReadStream(filepath)
@@ -69,6 +65,8 @@ module.exports = {
             })
         })
     },
+
+    // direct to s3 part begins
     directToS3:(file)=>{
         return new Promise(async(resolve, reject)=>{
             console.log(file);
