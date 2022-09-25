@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-require('dotenv').config();
+require('dotenv').config({path:"./vars/.env"});
 const hbs = require('express-handlebars')
 const PORT = process.env.PORT || 4000;
 const route = require('./routes');
